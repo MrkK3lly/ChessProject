@@ -4,7 +4,10 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({"rawtypes","serial","raw"})
+
+
+
 /*
  * Original code provided by NCI - Keith Maycock / Emin Zerman This class can be
  * used as a starting point for creating your Chess game project. The only piece
@@ -259,21 +262,21 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	 * Find all the squares currently been attached by white pieces This code is
 	 * from the Project Manual provided from NCI (Code Snippet3)
 	 */
-	private Stack getWhiteAttackingSquares(Stack pieces) {
-		while (!pieces.empty()) {
-			Square s = (Square) pieces.pop();
-			String tmpString = s.getName();
-			if (tmpString.contains("Knight")) {
-				tempK = getKnightMoves(s.getXC(), s.getYC(), s.getName());
-				while (!tempK.empty()) {
-					Square tempKnight = (Square) tempK.pop();
-					knight.push(tempKnight);
-				}
-			} else if (tmpString.contains("Bishop")) {
+	// private Stack getWhiteAttackingSquares(Stack pieces) {        ##Not sure what this is used for yet
+	// 	while (!pieces.empty()) {
+	// 		Square s = (Square) pieces.pop();
+	// 		String tmpString = s.getName();
+	// 		if (tmpString.contains("Knight")) {
+	// 			tempK = getKnightMoves(s.getXC(), s.getYC(), s.getName());
+	// 			while (!tempK.empty()) {
+	// 				Square tempKnight = (Square) tempK.pop();
+	// 				knight.push(tempKnight);
+	// 			}
+	// 		} else if (tmpString.contains("Bishop")) {
 
-			}
-		}
-	}
+	// 		}
+	// 	}
+	// }
 
 	/*
 	 * Method to return all the squares that a Rook can move to There are four
@@ -375,7 +378,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				}
 			}
 		} // end of the loop with x increasing and Y doing nothing...
+		Stack tmpRook = moves;
+		getLandingSquares(tmpRook);
 		return moves;
+		
 	}
 
 	/*
@@ -627,6 +633,8 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				}
 			}
 		} // end of the last loop
+		getLandingSquares(moves);
+		printStack(moves);
 		return moves;
 	}
 
@@ -635,56 +643,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	 * attacked by White Knights
 	 */
 	private Stack getKnightMoves(int x, int y, String piece) {
-		// // System.out.println(x);
-		// // System.out.println(y);
-		// // System.out.println(piece);
-
-		// Stack moves = new Stack();
-		// Stack attacking = new Stack();
-
-		// Square s = new Square(x + 1, y + 2);
-		// moves.push(s);
-		// Square s1 = new Square(x + 1, y - 2);
-		// moves.push(s1);
-		// Square s2 = new Square(x - 1, y + 2);
-		// moves.push(s2);
-		// Square s3 = new Square(x - 1, y - 2);
-		// moves.push(s3);
-		// Square s4 = new Square(x + 2, y + 1);
-		// moves.push(s4);
-		// Square s5 = new Square(x + 2, y - 1);
-		// moves.push(s5);
-		// Square s6 = new Square(x - 2, y + 1);
-		// moves.push(s6);
-		// Square s7 = new Square(x - 2, y - 1);
-		// moves.push(s7);
-
-		// for (int i = 0; i < 8; i++) {
-		// Square tmp = (Square) moves.pop();
-		// if ((tmp.getXC() < 0) || (tmp.getXC() > 7) || (tmp.getYC() < 0) ||
-		// (tmp.getXC() > 7)) {
-		// } else if (piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) +
-		// 20)))) {
-		// if (piece.contains("White")) {
-		// if (checkWhiteOponent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20)))
-		// {
-		// attacking.push(tmp);
-		// } else {
-		// System.out.println("Its our own colour piece");
-		// }
-		// } else {
-		// if (checkBlackOponent(tmp.getXC(), tmp.getYC())) {
-		// attacking.push(tmp);
-		// }
-		// }
-		// } else {
-		// attacking.push(tmp);
-		// }
-		// }
-		// // Stack tmp = attacking;
-		// // colourSquares(tmp);
-		// return attacking;
-		// }
+		
 		Square startingSquare = new Square(x, y, piece);
 		Stack moves = new Stack();
 		Stack attackingMove = new Stack();
@@ -720,7 +679,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				attackingMove.push(tmpmove);
 			}
 		}
+		getLandingSquares(attackingMove);
+		printStack(attackingMove);
 		return attackingMove;
+		
 	}
 
 	/*
@@ -1637,5 +1599,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		
 	}
 }
