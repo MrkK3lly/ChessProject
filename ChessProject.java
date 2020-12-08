@@ -11,6 +11,7 @@ import javax.swing.border.Border;
  * used as a starting point for creating your Chess game project. The only piece
  * that has been coded is a white pawn...a lot done, more to do!
  * 
+ * This code uses my CA2 code (2 player chess game) and adds an AI Player
  * Name: Mark Kelly Student Number: 17138311
  */
 
@@ -27,31 +28,43 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	JPanel panels;
 	JLabel pieces;
 	boolean correctColour;
+
 	Stack temporary;
 	AIAgent computer;
 	boolean agentwins;
 
-	/*
-	 * ####################################################################################
-	 * ######## Main method###############################################################
-	 * ####################################################################################
-	 */
+
+	 //#############################################################################
+	 //############### Main method #################################################
+	 //#############################################################################
 	public static void main(String[] args) {
-		JFrame frame = new ChessProject();
+		ChessProject myChess = new ChessProject();
+		myChess.startGame();
+	}
+	//#############################################################################
+	 //############### Start Game Method ##########################################
+	 //############################################################################
+
+	public void startGame() {
+		// JFrame frame = new ChessProject();
+		ChessProject frame = new ChessProject();
 		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		frame.pack();
 		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		
+		JOptionPane.showMessageDialog(null, "Start Game");
+		frame.makeAIMove();
+		;
 
 	}
 
-	/*
-	 * ################################################################################### 
-	 * ######## Set up Board ##############################################################
-	 * ####################################################################################
-	 */
+	
+	 //#############################################################################
+	 //############## Set up Board #################################################
+	 //#############################################################################
+	 
+	 
 
 	public ChessProject() {
 		Dimension boardSize = new Dimension(600, 600);
@@ -143,29 +156,18 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		temporary = new Stack();
 		computer = new AIAgent();
 		agentwins = false;
+		correctColour = false;
 		
-		JOptionPane.showMessageDialog(null,"Start Game");
-		makeAIMove();
 
 	}
 
-	/*
-	 * #################################################################################### 
-	 * ######## whos move is it ######## %0 = white #### %1 = black #################
-	 * ####################################################################################
-	 */
-	int moveCount = 0;
-
-	private void nextMove() {
-		moveCount++;
-		System.out.println("Cmove Count  = " + moveCount);
-	}
 	
-	/*
-	 * ############################################################################################ 
-	 * ###### method to colour squares of possible moves ### source CA3 doc on moodle #############
-	 * ############################################################################################
-	 */
+	 //#############################################################################
+	 //##################### method to colour squares of possible moves ############
+	 //###################### source CA3 doc on moodle #############################
+	 //#############################################################################
+	 
+	 
 	private void colourSquares(Stack squares) {
 		Border blueBorder = BorderFactory.createLineBorder(Color.BLUE, 3);
 		while (!squares.empty()) {
@@ -176,14 +178,12 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		}
 	}
 
-	/*
-	 * Method to get the landing square of a bunch of moves...
-	 */
-	/*
-	 * ############################################################################################ 
-	 * ###### method to get the landing squares of possible moves### source CA3 doc on moodle ####
-	 * ############################################################################################
-	 */
+		
+	 //#############################################################################
+	 //############## method to get the landing squares of possible moves ##########
+	 //#################### source CA3 doc on moodle ###############################
+	 //#############################################################################
+	 
 	private void getLandingSquares(Stack found) {
 		Move tmp;
 		Square landing;
@@ -196,11 +196,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		colourSquares(squares);
 	}
 
-	/*
-	 * ############################################################################################ 
-	 * ###### method to remove border colours ######## source snippets file on moodle #############
-	 * ############################################################################################
-	 */
+	
+	 //#############################################################################
+	 //################### method to remove border colours #########################
+	 //################# source snippets file on moodle ############################
+	 //#############################################################################
+	 
+	 
 	private void uncolourSquares() {
 		Border empty = BorderFactory.createEmptyBorder();
 		for (int i = 0; i < 64; i++) {
@@ -209,11 +211,12 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		}
 	}
 
-	/*
-	 * ###########################################################################################
-	 * ######### method to print stack ############### source snippets file on moodle #############
-	 * ############################################################################################
-	 */
+	
+	 //#############################################################################
+	 //###### method to print stack ######### source snippets file on moodle #######
+	 //#############################################################################
+	 
+	 
 	private void printStack(Stack input) {
 		Move m;
 		Square s, l;
@@ -226,12 +229,11 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		}
 	}
 
-
-	/*
-	 * #################################################################################### 
-	 * ######## Checks if there is a piece present on a square #############################
-	 * ####################################################################################
-	 */
+	
+	 //#############################################################################
+	 //######### Checks if there is a piece present on a square ####################
+	 //#############################################################################
+	
 	private Boolean piecePresent(int x, int y) {
 		Component c = chessBoard.findComponentAt(x, y);
 		if (c instanceof JPanel) {
@@ -241,12 +243,12 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		}
 	}
 
-	/*
-	 * ####################################################################################
-	 *  ######## Check if a piece is a Black ###############################################
-	 * #################################################################################### 
-	 * ######## also checks if piece taken is a king ######################################
-	 */
+	
+	 //#############################################################################
+	 //######## Check if a piece is a Black ########################################
+	 //################ also checks if piece taken is a king #######################
+	 //#############################################################################
+	 
 	private Boolean checkWhiteOponent(int newX, int newY) {
 		Boolean oponent;
 		Component c1 = chessBoard.findComponentAt(newX, newY);
@@ -264,12 +266,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		return oponent;
 	}
 
-	/*
-	 * #################################################################################### 
-	 * ######## Check if a piece is a White ########## source CA2 doc on moodle ###########
-	 * #################################################################################### 
-	 * ######## also checks if piece taken is a king ######################################
-	 */
+	
+	 //#############################################################################
+	 //############### Check if a piece is a White #################################
+	 //### source CA2 doc on moodle ###### also checks if piece taken is a king ####
+	 //#############################################################################
+	 
+	 
 	private Boolean checkBlackOponent(int newX, int newY) {
 		Boolean oponent;
 		Component c1 = chessBoard.findComponentAt(newX, newY);
@@ -279,7 +282,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		if (((tmp1.contains("White")))) {
 			oponent = true;
 			if (tmp1.contains("King")) {
-				JOptionPane.showMessageDialog(null, "White Player Wins \n\n Game Over! \n \n Please Play again :-)");
+				JOptionPane.showMessageDialog(null, "Black Player Wins \n\n Game Over! \n \n Please Play again :-)");
 				System.exit(0);
 			}
 		} else {
@@ -291,20 +294,25 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	private String pieceName(int newX, int newY) {
 		Component c1 = chessBoard.findComponentAt(newX, newY);
 		if (c1 instanceof JLabel) {
+			// System.out.println("it works here - "+ c1);
+			// System.out.println(newX + " "+ newY);
 			JLabel awaitingPiece = (JLabel) c1;
 			String tmp1 = awaitingPiece.getIcon().toString();
+			// System.out.println(tmp1);
 			return tmp1;
 		} else {
 			return "";
 		}
 	}
 
-	/*
-	 * #################################################################################### 
-	 * ######## Check if there is at least 1 space between kings##########################
-	 * ####################################################################################
-	 */
+	
+	 //#############################################################################
+	 //########## Check if there is at least 1 space between kings ##################
+	 //#############################################################################
+	 
+	 
 	private Boolean checkKingSpace(int newX, int newY) {
+
 		// check all 8 squares around landing square
 		if ((piecePresent(newX, newY + 75) && pieceName(newX, newY + 75).contains("King"))
 				|| (piecePresent(newX, newY - 75) && pieceName(newX, newY - 75).contains("King"))
@@ -319,85 +327,56 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		return false;
 	}
 
-	/*
-	 * Find all white pieces on the board This code is from the Project Manual
-	 * provided from NCI code snippet 2
-	 */
-	/*
-	 * #################################################################################### 
-	 * ###### Find all white pieces on the board ######## source CA3 doc on moodle ########
-	 * ####################################################################################
-	 */
+		
+	 //#############################################################################
+	 //################## Find all white pieces on the board #######################
+	 //##################### source CA3 doc on moodle ##############################
+ 	 //#############################################################################
+	  
+	 
 	private Stack findWhitePieces() {
-		System.out.println("got this far");
 		Stack Squares = new Stack();
 		String icon;
 		int x;
-		Component tmp;
 		int y;
-		int count =0;
+
 		String pieceName;
 		for (int i = 0; i < 600; i += 75) {
-			System.out.println("got this far 2");
-			for (int j = 0; j < 600; j+= 75) {
-				
-				count++;
-															System.out.println("count loops "+count);
+			for (int j = 0; j < 600; j += 75) {
+
 				y = i / 75;
-															System.out.println("I ="+i);
 				x = j / 75;
-															System.out.println("J ="+i);
-				tmp = chessBoard.findComponentAt(j, i);
-															System.out.println(tmp);
-				//System.out.println(tmp.getClass().getName());
+
+				Component tmp = chessBoard.findComponentAt(j, i);
+				// System.out.println(tmp.getClass().getName());
+
 				if (tmp instanceof JLabel) {
-															System.out.println("got this far IF");
+					// System.out.println(tmp);
 					chessPiece = (JLabel) tmp;
 					icon = chessPiece.getIcon().toString();
-															System.out.println(icon);
 					pieceName = icon.substring(0, (icon.length() - 4));
-															System.out.println(pieceName);
 					if (pieceName.contains("White")) {
 						Square stmp = new Square(x, y, pieceName);
 						Squares.push(stmp);
 					}
-				}
-				else{
-					System.out.println("no if for you");
+				} else {
+					//System.out.println("no if for you");
 				}
 			}
 		}
-		printStack(Squares);
-		return Squares;
 		
+		return Squares;
+
 	}
 
-	/*
-	 * Find all the squares currently been attached by white pieces This code is
-	 * from the Project Manual provided from NCI (Code Snippet3)
-	 */
-	// private Stack getWhiteAttackingSquares(Stack pieces) { ##Not sure what this
-	// is used for yet
-	// while (!pieces.empty()) {
-	// Square s = (Square) pieces.pop();
-	// String tmpString = s.getName();
-	// if (tmpString.contains("Knight")) {
-	// tempK = getKnightMoves(s.getXC(), s.getYC(), s.getName());
-	// while (!tempK.empty()) {
-	// Square tempKnight = (Square) tempK.pop();
-	// knight.push(tempKnight);
-	// }
-	// } else if (tmpString.contains("Bishop")) {
 
-	// }
-	// }
-	// }
-
-	/*
-	 * ########################################################################################## 
-	 * ## Find all squares that a White Rook can move ### source snippets file on moodle ########
-	 * ##########################################################################################
-	 */
+	
+	 //#############################################################################
+	 //########## Find all squares that a White Rook can move ######################
+	 //###################### source snippets file on moodle ######################
+	 //#############################################################################
+	 
+	 
 
 	private Stack getRookMoves(int x, int y, String piece) {
 		Square startingSquare = new Square(x, y, piece);
@@ -475,17 +454,18 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				}
 			}
 		} // end of the loop with x increasing and Y doing nothing...
-		Stack tmpRook = moves;
-		getLandingSquares(tmpRook);
+		
 		return moves;
 
 	}
 
-	/*
-	 * ########################################################################################### 
-	 * ## Find all squares that a White Queen can move ### source snippets file on moodle ########
-	 * ###########################################################################################
-	 */
+	
+	 //#############################################################################
+	 //############## ## Find all squares that a White Queen can move ##############
+	 //###################### source snippets file on moodle #######################
+	 //#############################################################################
+	 
+	 
 	private Stack getQueenMoves(int x, int y, String piece) {
 		Stack completeMoves = new Stack();
 		Stack tmpMoves = new Stack();
@@ -504,11 +484,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		return completeMoves;
 	}
 
-	/*
-	 * ########################################################################################### 
-	 * ## check if there is a BlackKing in the surrounding squares ### source snippets file on moodle ########
-	 * ###########################################################################################
-	 */
+	
+	 //#############################################################################
+	 //###### ## check if there is a BlackKing in the surrounding squares###########
+	 //### source snippets file on moodle ##########################################
+	 //#############################################################################
+	 
+	 
 	private Boolean checkSurroundingSquares(Square s) {
 		Boolean possible = false;
 		int x = s.getXC() * 75;
@@ -524,11 +506,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		return possible;
 	}
 
-	/*
-	 * ########################################################################################## 
-	 * ## Find all squares that a White King can move ### source snippets file on moodle ########
-	 * ##########################################################################################
-	 */
+	
+	 //#############################################################################
+	 //################ Find all squares that a White King can move ################
+	 //############## source ############# snippets file on moodle #################
+	 //#############################################################################
+	 
+	 
 
 	private Stack getKingSquares(int x, int y, String piece) {
 		Square startingSquare = new Square(x, y, piece);
@@ -652,12 +636,12 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		return moves;
 	}
 
-	/*
-	 * ############################################################################################ 
-	 * ## Find all squares that a White Bishop can move ### source snippets file on moodle ########
-	 * ############################################################################################
-	 */
-
+	
+	 //#############################################################################
+	 //############### ## Find all squares that a White Bishop can move ############
+	 //################# source	snippets file on moodle ############################
+	 //#############################################################################
+	 
 	private Stack getBishopMoves(int x, int y, String piece) {
 		Square startingSquare = new Square(x, y, piece);
 		Stack moves = new Stack();
@@ -734,17 +718,17 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				}
 			}
 		} // end of the last loop
-		getLandingSquares(moves);
-		printStack(moves);
+		
 		return moves;
 	}
 
-	/*
-	 * ############################################################################################ 
-	 * ## Find all squares that a White Knight can move ### source snippets file on moodle ########
-	 * ############################################################################################
-	 */
-	private Stack getKnightMoves(int x, int y, String piece) {
+	
+	 //#############################################################################
+	 //############## Find all squares that a White Knight can move ################
+	 //########### source snippets file on moodle ##################################
+	 //#############################################################################
+	 
+	 	private Stack getKnightMoves(int x, int y, String piece) {
 
 		Square startingSquare = new Square(x, y, piece);
 		Stack moves = new Stack();
@@ -781,23 +765,107 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				attackingMove.push(tmpmove);
 			}
 		}
-		getLandingSquares(attackingMove);
-		printStack(attackingMove);
+		
 		return attackingMove;
 
 	}
 
+	//#############################################################################
+	//### get white pawn squares ### see get king squares & get Bishop squares ####
+	//#############################################################################
+	
+	private Stack getWhitePawnSquares(int x, int y, String piece) {
+		Stack moves = new Stack();
+		Square startSquare = new Square(x, y, piece);
 
-	/*
-	 * #################################################################################
-	 * ######## method make AI move ############### source snippets file on moodle #####
-	 * #################################################################################
-	 */
+		// there are 4 possible moves for a white Pawn
+		Move wPM1;
+		Move wPM2;
+		Move wPM3;
+		Move wPM4;
+
+		// all the possible moves the pawn can make
+		// Down One square
+		Square posSq1 = new Square(x, y + 1, piece);
+		// Right + Down One (taking a piece only)
+		Square posSq2 = new Square(x + 1, y + 1, piece);
+		// Left + Down One (taking a piece only)
+		Square posSq3 = new Square(x - 1, y + 1, piece);
+		// Down Two (first move only)
+		Square posSq4 = new Square(x, y + 2, piece);
+
+		if (y == 1) {
+			// first move
+			wPM1 = new Move(startSquare, posSq4);
+			// can move +2 or +1 in y direction
+			// not sure why the +20 is used but won't play without it. (included in code
+			// snippets for other pieces)
+			if (!piecePresent(((posSq4.getXC() * 75) + 20), (((posSq4.getYC() * 75) + 20)))
+					&& !piecePresent(((posSq1.getXC() * 75) + 20), (((posSq1.getYC() * 75) + 20)))) {
+				moves.push(wPM1);
+			} else {
+				// not on the edge of the board
+				if (!(x + 1 > 7)) {
+					if (piecePresent(((posSq2.getXC() * 75) + 20), (((posSq2.getYC() * 75) + 20)))) {
+						// check if piece present is black
+						if (checkWhiteOponent(((posSq2.getXC() * 75) + 20), (((posSq2.getYC() * 75) + 20)))) {
+							moves.push(wPM1);
+						}
+					}
+				}
+				// not on the edge of the board
+				if (!(x - 1 < 0)) {
+					if (piecePresent(((posSq2.getXC() * 75) + 20), (((posSq2.getYC() * 75) + 20)))) {
+						// check if piece present is black
+						if (checkWhiteOponent(((posSq2.getXC() * 75) + 20), (((posSq2.getYC() * 75) + 20)))) {
+							moves.push(wPM1);
+						}
+					}
+				}
+			}
+		}
+
+		// not first move
+		if (!(y + 1 > 7)) {
+			wPM2 = new Move(startSquare, posSq1);
+			if (!piecePresent(((posSq1.getXC() * 75) + 20), (((posSq1.getYC() * 75) + 20)))) {
+				moves.push(wPM2);
+			}
+			//move x+1 & y+1 to take piece
+
+			if (!(x + 1 > 7)) {
+				wPM3 = new Move(startSquare, posSq2);
+				if (piecePresent(((posSq2.getXC() * 75) + 20), (((posSq2.getYC() * 75) + 20)))) {
+					//check if piece present is black
+					if (checkWhiteOponent(((posSq2.getXC() * 75) + 20), (((posSq2.getYC() * 75) + 20)))) {
+						moves.push(wPM3);
+					}
+				}
+			}
+			//move x-1 & y+1 to take piece
+			if (!(x - 1 < 0)) {
+				wPM4 = new Move(startSquare, posSq3);
+				if (piecePresent(((posSq3.getXC() * 75) + 20), (((posSq3.getYC() * 75) + 20)))) {
+					if (checkWhiteOponent(((posSq3.getXC() * 75) + 20), (((posSq3.getYC() * 75) + 20)))) {
+						moves.push(wPM4);
+					}
+				}
+			}
+		}
+		return moves;
+	}
+
+	
+	 //#############################################################################
+	 //###### method make AI move ######### source snippets file on moodle #########
+	 //#############################################################################
+	 
 	private void makeAIMove() {
 		/*
 		 * When the AI Agent decides on a move, a red border shows the square from where
 		 * the move started and the landing square of the move.
 		 */
+		System.out.println("Computer's move");
 		uncolourSquares();
 		layeredPane.validate();
 		layeredPane.repaint();
@@ -806,32 +874,29 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		Stack temporary = new Stack();
 		Move tmp;
 		while (!white.empty()) {
-			System.out.println("white is not empty");
+			// System.out.println("white is not empty");
 			Square s = (Square) white.pop();
 			String tmpString = s.getName();
 			Stack tmpMoves = new Stack();
-			
-			/*
-			 * We need to identify all the possible moves that can be made by the AI
-			 * Opponent
-			 */
+			// We need to identify all the possible moves that can be made by the AI
+			// Opponent
 			if (tmpString.contains("Knight")) {
-				tmpMoves = getKnightMoves(s.getXC(), s.getYC(), s.getName());
-				System.out.println("getKnight");
+				tmpMoves = getKnightMoves(s.getXC(), s.getYC(), s.getName());// System.out.println("getKnight");
 			} else if (tmpString.contains("Bishop")) {
-				tmpMoves = getBishopMoves(s.getXC(), s.getYC(), s.getName());
-				// } else if (tmpString.contains("Pawn")) {
-
+				tmpMoves = getBishopMoves(s.getXC(), s.getYC(), s.getName());/// System.out.println("getBishop");
+			} else if (tmpString.contains("Pawn")) {
+				tmpMoves = getWhitePawnSquares(s.getXC(), s.getYC(), s.getName());
 			} else if (tmpString.contains("Rook")) {
-				tmpMoves = getRookMoves(s.getXC(), s.getYC(), s.getName());
+				tmpMoves = getRookMoves(s.getXC(), s.getYC(), s.getName());// System.out.println("getRook");
 			} else if (tmpString.contains("Queen")) {
-				tmpMoves = getQueenMoves(s.getXC(), s.getYC(), s.getName());
+				tmpMoves = getQueenMoves(s.getXC(), s.getYC(), s.getName());// System.out.println("getQueen");
 			} else if (tmpString.contains("King")) {
-				tmpMoves = getKingSquares(s.getXC(), s.getYC(), s.getName());
+				tmpMoves = getKingSquares(s.getXC(), s.getYC(), s.getName());// System.out.println("getKing");
 			}
-
+			//System.out.println(tmpMoves);
 			while (!tmpMoves.empty()) {
 				tmp = (Move) tmpMoves.pop();
+				//System.out.println(tmp);
 				completeMoves.push(tmp);
 			}
 		}
@@ -920,7 +985,23 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				layeredPane.validate();
 				layeredPane.repaint();
 			}
-			nextMove();
+			correctColour = true;
+			//System.out.println(correctColour + " after AI move");
+			turns();
+			// nextMove();
+		}
+	}
+
+	public void turns() {
+		if (correctColour = true) {
+			System.out.println("Human players turn");
+			correctColour = true;
+			//System.out.println(correctColour + " line-1056");
+
+		} else {
+			correctColour = false;
+			System.out.println("Computers turn");
+			makeAIMove();
 		}
 	}
 
@@ -950,17 +1031,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		chessPiece.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
 		chessPiece.setSize(chessPiece.getWidth(), chessPiece.getHeight());
 		layeredPane.add(chessPiece, JLayeredPane.DRAG_LAYER);
-		String tmp = chessPiece.getIcon().toString();
-		String pieceName = tmp.substring(0, (tmp.length() - 4));
 
-		/* call knight moves check - what squares a knight can move to */
-		if (pieceName.contains("Knight")) {
-			getKnightMoves(startX, startY, pieceName);
-		}
-		if (pieceName.contains("Rook")) {
-			getRookMoves(startX, startY, pieceName);
-		}
 
+		
 	}
 
 	public void mouseDragged(MouseEvent me) {
@@ -969,9 +1042,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		chessPiece.setLocation(me.getX() + xAdjustment, me.getY() + yAdjustment);
 	}
 
-	// ##########################################################################################
-	// ################################# Mouse Released #########################################
-	// ##########################################################################################
+	// ######################################################################################
+	// ############################## Mouse Released#########################################
+	// ######################################################################################
 
 	public void mouseReleased(MouseEvent e) {
 		if (chessPiece == null)
@@ -985,8 +1058,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		String pieceName = tmp.substring(0, (tmp.length() - 4));
 		Boolean validMove = false;
 
-		correctColour = true;
-		// ######### from Keith Maycock videos on Moodle #######################################
+		// ######### from Keith Maycock videos on Moodle ######################################
 		int landingX = (e.getX() / 75);
 		int landingY = (e.getY() / 75);
 		int xMovement = Math.abs((e.getX() / 75) - startX);
@@ -1000,20 +1072,20 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		System.out.println("*-*-*-*-*-*-*-*-*-*-");
 		uncolourSquares();
 
-		if (pieceName.contains("White") && (moveCount % 2 == 0)) {
-			correctColour = true;
+		// if (pieceName.contains("White") && (moveCount % 2 == 0)) {
+		// correctColour = true;
 
-		} else if (pieceName.contains("Black") && (moveCount % 2 == 1)) {
-			correctColour = true;
-		} else {
-			correctColour = false;
+		// } else if (pieceName.contains("Black") && (moveCount % 2 == 1)) {
+		// correctColour = true;
+		// } else {
+		// correctColour = false;
 
-		}
-		if (correctColour) {
+		// }
+		if (correctColour & pieceName.contains("Black")) {
 
-			// #######################################################################################
-			// ######################### White Pawn Moves ########### part source NCi file ###########
-			// #######################################################################################
+			// ###########################################################################
+			// ############## White Pawn Moves ########### part source NCi file ##########
+			// ###########################################################################
 			// * Pawns move vertically forward one square, with the option to move two
 			// squares
 			// * if they have not yet moved. Pawns are the only piece to capture different
@@ -1097,18 +1169,16 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 					}
 				}
 			}
-			// ##########################################################################################
-			// ############################ Black Pawn Moves ########### part source NCi file ###########
-			// ##########################################################################################
+			// ############################################################################
+			// ############### Black Pawn Moves ########### part source NCifile ###########
+			// ############################################################################
 			// * Pawns move vertically forward one square, with the option to move two
 			// squares
-			// * if they have not yet moved. Pawns are the only piece to capture different
-			// to
-			// * how they move. Pawns capture one square diagonally in a forward direction.
-			// * Pawns are unable to move backwards on captures or moves. Upon reaching the
-			// * other side of the board a pawn promotes into any other piece, Queen for
-			// this
-			// * CA
+			// if they have not yet moved. Pawns are the only piece to capture different
+			// to how they move. Pawns capture one square diagonally in a forward direction
+			// Pawns are unable to move backwards on captures or moves. Upon reaching the
+			// other side of the board a pawn promotes into any other piece, Queen for
+			// this CA
 			else if (pieceName.equals("BlackPawn")) {
 				if (startY == 6) {
 					if ((startX == (e.getX() / 75))
@@ -1175,9 +1245,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 					}
 				}
 			}
-			// #####################################################################################
-			// ################################# Queen Moves #######################################
-			// #####################################################################################
+			// #######################################################################
+			// #################### Queen Moves#######################################
+			// #######################################################################
 			// Queens move diagonally, horizontally, or vertically any number
 			// of squares. They are unable to jump over pieces. they are a combo of the Rook
 			// & Bishop
@@ -1191,7 +1261,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 					validMove = false;
 				}
 
-				// ################# This part of the code is copied from the Rook below ###########################
+				// ##### This part of the code is copied from the Rook below ###########
 
 				else if (((xDistance != 0) && (yDistance == 0))
 						|| ((xDistance == 0) && (Math.abs(landingY - startY) != 0))) {
@@ -1263,7 +1333,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 					}
 				}
 
-				// ####################This part of the code is copied from the Bishop below########################
+				//###### This part of the code is copied from the Bishopbelow ##########
 
 				else {
 					validMove = true;
@@ -1324,9 +1394,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				}
 			}
 
-			// ######################################################################################
-			// ################################# Knight Moves #######################################
-			// ######################################################################################
+			// ##################################################################
+			// ############## Knight Moves ######################################
+			// ##################################################################
 
 			// Knights move in an ‘L’ shape’: two squares in a horizontal
 			// or vertical direction, then move one square horizontally or vertically. They
@@ -1350,9 +1420,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				}
 			}
 
-			// ####################################################################################
-			// ################################# King Moves #######################################
-			// ####################################################################################
+			// ###############################################################
+			// ############## King Moves #####################################
+			// ###############################################################
 
 			// Kings move one square in any direction, so long as that square
 			// is not attacked by an enemy piece.
@@ -1385,9 +1455,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				}
 			}
 
-			// ######################################################################################
-			// ################################# Bishop Moves #######################################
-			// ######################################################################################
+			// ##########################################################################
+			// ##################### Bishop Moves #######################################
+			// ##########################################################################
 			// Bishops move diagonally any number of squares. They are
 			// unable to jump over pieces. this code is based on the Practical Workbook for
 			// CA2
@@ -1460,9 +1530,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				}
 			}
 
-			// ####################################################################################
-			// ################################# Rook Moves #######################################
-			// ####################################################################################
+			// ##########################################################################
+			// ####################### Rook Moves #######################################
+			// ##########################################################################
 			// Rooks move horizontally or vertically any number of squares.
 			// They are unable to jump over pieces.this code is based on the Practical
 			// Workbook for
@@ -1551,9 +1621,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				}
 			}
 		}
-		// ##########################################################################################
-		// ########################### End ofMouse Released #########################################
-		// ##########################################################################################
+		// ###################################################################################
+		// #################### End ofMouse Released #########################################
+		// ###################################################################################
 
 		if (!validMove) {
 			int location = 0;
@@ -1567,7 +1637,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 			panels = (JPanel) chessBoard.getComponent(location);
 			panels.add(pieces);
 		} else {
-			nextMove();
+			// nextMove();
 			if (wSuccess) {
 				int location = 56 + (e.getX() / 75);
 				if (c instanceof JLabel) {
@@ -1609,6 +1679,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				}
 				chessPiece.setVisible(true);
 			}
+			correctColour = false;
+			//System.out.println(correctColour + " after human move");
+			// turns();
+			makeAIMove();
 		}
 	}
 
